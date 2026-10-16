@@ -102,50 +102,50 @@ export default function JamMasjid() {
 
   if (!waktuSekarang || !jadwalShalat || !waktuImsak) return <div className="bg-black w-screen h-screen"></div>;
 
-  if (modeLayar === 'ADZAN') return (<div className="w-screen h-screen bg-black flex flex-col items-center justify-center text-white"><div className="animate-pulse flex flex-col items-center"><h1 className="text-5xl font-bold mb-4 font-modern text-neutral-400">SAATNYA ADZAN</h1><h2 className="text-[9rem] font-extrabold text-white my-4 font-elegant">{namaWaktuAktif}</h2></div></div>);
-  if (modeLayar === 'IQAMAH') return (<div className="w-screen h-screen bg-black flex flex-col items-center justify-center text-white"><h1 className="text-4xl mb-8 font-modern text-neutral-400">Menuju Iqamah</h1><h2 className="text-[12rem] font-bold text-white leading-none font-modern">{teksIqamah}</h2><p className="text-3xl mt-12 text-neutral-500 font-modern">Luruskan dan Rapatkan Shaf Anda</p></div>);
-  if (modeLayar === 'SHALAT') return (<div className="w-screen h-screen bg-black flex flex-col items-center justify-center text-white"><p className="text-3xl opacity-30 uppercase font-modern text-neutral-400">Harap Tenang & Matikan Alat Komunikasi</p></div>);
+  if (modeLayar === 'ADZAN') return (<div className="w-full min-h-screen bg-black flex flex-col items-center justify-center text-white px-4 text-center"><div className="animate-pulse flex flex-col items-center"><h1 className="text-3xl md:text-5xl font-bold mb-4 font-modern text-neutral-400">SAATNYA ADZAN</h1><h2 className="text-6xl md:text-[9rem] font-extrabold text-white my-4 font-digital uppercase">{namaWaktuAktif}</h2></div></div>);
+  if (modeLayar === 'IQAMAH') return (<div className="w-full min-h-screen bg-black flex flex-col items-center justify-center text-white px-4 text-center"><h1 className="text-2xl md:text-4xl mb-4 md:mb-8 font-modern text-neutral-400">Menuju Iqamah</h1><h2 className="text-[6rem] md:text-[12rem] font-bold text-white leading-none font-digital">{teksIqamah}</h2><p className="text-xl md:text-3xl mt-6 md:mt-12 text-neutral-500 font-modern">Luruskan dan Rapatkan Shaf Anda</p></div>);
+  if (modeLayar === 'SHALAT') return (<div className="w-full min-h-screen bg-black flex flex-col items-center justify-center text-white px-4 text-center"><p className="text-xl md:text-3xl opacity-30 uppercase font-modern text-neutral-400">Harap Tenang & Matikan Alat Komunikasi</p></div>);
 
   return (
-    <div className="w-screen h-screen overflow-hidden bg-black text-white flex flex-col p-6">
+    <div className="w-full min-h-screen overflow-x-hidden bg-black text-white flex flex-col p-4 md:p-6">
       
-      {/* HEADER */}
-      <div className="flex justify-between items-start z-10">
-        <div className="flex items-center gap-4">
-          <svg className="w-16 h-16 text-white" fill="currentColor" viewBox="0 0 24 24">
+      {/* HEADER: Responsif ditumpuk di HP, menyamping di Laptop */}
+      <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-4 md:gap-0 z-10 text-center md:text-left">
+        <div className="flex flex-col md:flex-row items-center gap-3 md:gap-4">
+          <svg className="w-12 h-12 md:w-16 md:h-16 text-white" fill="currentColor" viewBox="0 0 24 24">
             <path d="M12 2C12 2 9 5 9 8C9 10.5 11 12 11 12V22H13V12C13 12 15 10.5 15 8C15 5 12 2 12 2ZM5 12C5 12 2 15 2 18V22H9V16H15V22H22V18C22 15 19 12 19 12H5Z"/>
           </svg>
           <div>
-            <h1 className="text-4xl font-elegant font-bold text-white tracking-wide">MASJID NURUL HUDA</h1>
-            <h2 className="text-xl text-neutral-400 font-modern font-light mt-1">Blok G - Telaga Harapan</h2>
-            <p className="text-sm italic text-neutral-500 font-modern mt-1">Bersama dalam Iman, Menuju Ridha Allah</p>
+            <h1 className="text-2xl md:text-4xl font-modern font-extrabold text-white tracking-wide">MASJID NURUL HUDA</h1>
+            <h2 className="text-sm md:text-xl text-neutral-400 font-modern font-light mt-1">Blok G - Telaga Harapan</h2>
+            <p className="text-xs md:text-sm italic text-neutral-500 font-modern mt-1 hidden md:block">Bersama dalam Iman, Menuju Ridha Allah</p>
           </div>
         </div>
 
-        <div className="text-right font-modern">
-          <div className="text-2xl font-semibold text-white tracking-wide">{getMasehi(waktuSekarang)}</div>
-          <div className="text-neutral-400 text-lg font-light mt-1">{getHijriah(waktuSekarang)}</div>
+        <div className="text-center md:text-right font-modern">
+          <div className="text-lg md:text-2xl font-semibold text-white tracking-wide">{getMasehi(waktuSekarang)}</div>
+          <div className="text-neutral-400 text-sm md:text-lg font-light mt-1">{getHijriah(waktuSekarang)}</div>
         </div>
       </div>
 
-      {/* JAM TENGAH MAKSIMAL */}
-      <div className="flex-1 flex flex-col items-center justify-center z-10">
-        <div className="text-[9.5rem] font-bold leading-none tracking-tighter text-white font-modern flex items-end">
+      {/* JAM TENGAH: Font Digital & Responsif */}
+      <div className="flex-1 flex flex-col items-center justify-center z-10 my-8 md:my-0">
+        <div className="text-6xl sm:text-8xl md:text-[9.5rem] font-bold leading-none tracking-tighter text-white font-digital flex items-end justify-center">
           {waktuSekarang.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
-          <span className="text-4xl font-light ml-4 text-neutral-500 mb-5 tracking-widest uppercase">W I B</span>
+          <span className="text-lg md:text-4xl font-modern font-light ml-2 md:ml-4 text-neutral-500 mb-2 md:mb-5 tracking-widest uppercase">W I B</span>
         </div>
         
-        <div className="bg-neutral-900 border border-neutral-800 rounded-full px-8 py-3 mt-4 flex items-center gap-3">
-          <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C12 2 9 5 9 8C9 10.5 11 12 11 12V22H13V12C13 12 15 10.5 15 8C15 5 12 2 12 2Z"/></svg>
-          <span className="text-xl font-modern font-medium tracking-wide text-neutral-300">
+        <div className="bg-neutral-900 border border-neutral-800 rounded-full px-4 md:px-8 py-2 md:py-3 mt-6 md:mt-4 flex items-center gap-2 md:gap-3 max-w-full overflow-hidden text-ellipsis whitespace-nowrap">
+          <svg className="w-4 h-4 md:w-5 md:h-5 text-white flex-shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C12 2 9 5 9 8C9 10.5 11 12 11 12V22H13V12C13 12 15 10.5 15 8C15 5 12 2 12 2Z"/></svg>
+          <span className="text-sm md:text-xl font-modern font-medium tracking-wide text-neutral-300">
             Menuju <span className="text-white font-bold">{waktuSelanjutnya?.nama}</span> • -{teksHitungMundur}
           </span>
         </div>
       </div>
 
-      {/* PANEL JADWAL */}
-      <div className="bg-neutral-900/40 border border-neutral-800 rounded-2xl p-3 flex justify-between z-10 mb-4">
-        {['Imsak', 'Subuh', 'Syuruk', 'Zuhur', 'Ashar', 'Maghrib', 'Isya'].map((nama) => {
+      {/* PANEL JADWAL: Grid 4 kolom di HP, menyamping penuh di TV */}
+      <div className="bg-neutral-900/40 border border-neutral-800 rounded-2xl p-2 md:p-3 grid grid-cols-4 md:flex md:justify-between gap-2 md:gap-0 z-10 mb-4">
+        {['Imsak', 'Subuh', 'Syuruk', 'Zuhur', 'Ashar', 'Maghrib', 'Isya'].map((nama, index) => {
           let waktu, ikon;
           if (nama === 'Imsak') { waktu = waktuImsak; ikon = <path d="M12 2A10 10 0 1022 12A10 10 0 0012 2M12 4A8 8 0 114 12A8 8 0 0112 4Z"/>; }
           else if (nama === 'Subuh') { waktu = jadwalShalat.fajr; ikon = <path d="M12 2l-5 5h3v4h4v-4h3l-5-5zM5 13v2h14v-2H5zm-2 4v2h18v-2H3z"/>; }
@@ -156,30 +156,32 @@ export default function JamMasjid() {
           else if (nama === 'Isya') { waktu = jadwalShalat.isha; ikon = <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>; }
 
           const isActive = waktuSelanjutnya?.nama === nama;
+          // Menyembunyikan elemen terakhir (Isya) ke tengah di baris kedua untuk HP agar simetris
+          const gridClass = index === 6 ? 'col-span-4 md:col-span-1 max-w-[200px] mx-auto md:max-w-full' : '';
 
           return (
-            <div key={nama} className={`flex flex-col items-center justify-center py-3 px-4 rounded-xl w-full transition-all duration-300 font-modern ${
+            <div key={nama} className={`flex flex-col items-center justify-center py-2 md:py-3 px-1 md:px-4 rounded-xl w-full transition-all duration-300 font-modern ${gridClass} ${
               isActive ? 'bg-white text-black scale-105 shadow-[0_0_20px_rgba(255,255,255,0.3)]' : 'text-neutral-500 bg-transparent'
             }`}>
-              <svg className={`w-7 h-7 mb-2 ${isActive ? 'text-black' : 'text-neutral-600'}`} fill="currentColor" viewBox="0 0 24 24">{ikon}</svg>
-              <p className="text-sm font-light uppercase tracking-widest">{nama}</p>
-              <p className={`text-4xl font-bold tracking-tight mt-1 ${isActive ? 'text-black' : 'text-white'}`}>{formatJam(waktu ?? null)}</p>
+              <svg className={`w-5 h-5 md:w-7 md:h-7 mb-1 md:mb-2 ${isActive ? 'text-black' : 'text-neutral-600'}`} fill="currentColor" viewBox="0 0 24 24">{ikon}</svg>
+              <p className="text-[10px] md:text-sm font-light uppercase tracking-widest">{nama}</p>
+              <p className={`text-lg md:text-4xl font-bold tracking-tight mt-0 md:mt-1 font-digital ${isActive ? 'text-black' : 'text-white'}`}>{formatJam(waktu ?? null)}</p>
             </div>
           )
         })}
       </div>
       
-      {/* RUNNING TEXT DIPERBAIKI (Ruang lebih luas & Animasi Penuh) */}
-      <div className="relative py-4 px-2 overflow-hidden bg-neutral-900/30 rounded-full font-modern z-10 border border-neutral-800 flex items-center">
-         <div className="animate-[marquee_25s_linear_infinite] whitespace-nowrap text-white tracking-wide text-xl font-light">
-            "Dirikanlah shalat, karena shalat itu mencegah dari perbuatan keji dan mungkar." (QS. Al-Ankabut: 45) &nbsp; • &nbsp; {infoKajian.judul ? `Info Kajian: ${infoKajian.judul} ${infoKajian.pemateri}` : "Mari rapatkan shaf dan matikan alat komunikasi."}
+      {/* RUNNING TEXT */}
+      <div className="relative py-3 md:py-4 px-2 overflow-hidden bg-neutral-900/30 rounded-full font-modern z-10 border border-neutral-800 flex items-center">
+         <div className="animate-[marquee_25s_linear_infinite] whitespace-nowrap text-white tracking-wide text-sm md:text-xl font-light">
+           "Dirikanlah shalat, karena shalat itu mencegah dari perbuatan keji dan mungkar." (QS. Al-Ankabut: 45) &nbsp; • &nbsp; {infoKajian.judul ? `Info Kajian: ${infoKajian.judul} ${infoKajian.pemateri}` : "Mari rapatkan shaf dan matikan alat komunikasi."}
          </div>
       </div>
 
-      {/* IMPORT FONT & ANIMASI */}
+      {/* IMPORT FONT (Diganti ke Orbitron untuk Jam Digital) & ANIMASI */}
       <style dangerouslySetInnerHTML={{__html: `
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800&family=Outfit:wght@300;400;600;800&display=swap');
-        .font-elegant { font-family: 'Playfair Display', serif; }
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Outfit:wght@300;400;600;800&display=swap');
+        .font-digital { font-family: 'Orbitron', sans-serif; }
         .font-modern { font-family: 'Outfit', sans-serif; }
         @keyframes marquee { 
           0% { transform: translateX(100vw); } 
