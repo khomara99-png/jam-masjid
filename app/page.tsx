@@ -96,40 +96,23 @@ export default function JamMasjid() {
   }, []);
 
   const formatJam = (tanggal: Date | null) => tanggal ? tanggal.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) : "--:--";
-  
   const getMasehi = (tanggal: Date) => tanggal.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
   
-  // === FUNGSI HIJRIAH ANTI BUG ANDROID ===
   const getHijriah = (tanggal: Date) => {
     let penyesuaianHari = 0; 
-    
-    // Tambah 1 hari otomatis jika waktu saat ini sudah melewati Maghrib
-    if (jadwalShalat && tanggal.getTime() >= jadwalShalat.maghrib.getTime()) {
-      penyesuaianHari += 1;
-    }
-
+    if (jadwalShalat && tanggal.getTime() >= jadwalShalat.maghrib.getTime()) penyesuaianHari += 1;
     const tanggalKoreksi = new Date(tanggal.getTime() + (penyesuaianHari * 24 * 60 * 60 * 1000));
-    
     try {
-      // Ambil murni angkanya saja (format Internasional)
-      const formatter = new Intl.DateTimeFormat('en-US-u-ca-islamic-umalqura', { 
-        day: 'numeric', month: 'numeric', year: 'numeric' 
-      });
+      const formatter = new Intl.DateTimeFormat('en-US-u-ca-islamic-umalqura', { day: 'numeric', month: 'numeric', year: 'numeric' });
       const parts = formatter.formatToParts(tanggalKoreksi);
-      
       let hari = '1', bulan = '1', tahun = '1448';
       parts.forEach(part => {
         if (part.type === 'day') hari = part.value;
         if (part.type === 'month') bulan = part.value;
         if (part.type === 'year') tahun = part.value;
       });
-
-      // Daftar nama bulan paten buatan sendiri
       const daftarBulan = ["Muharram", "Safar", "Rabiul Awal", "Rabiul Akhir", "Jumadil Awal", "Jumadil Akhir", "Rajab", "Sya'ban", "Ramadhan", "Syawal", "Dzulqa'dah", "Dzulhijjah"];
-      
-      // Bersihkan teks tahun jika ada sisa huruf aneh (misal SM/AH)
       const tahunBersih = tahun.replace(/[^0-9]/g, '');
-
       return `${hari} ${daftarBulan[parseInt(bulan) - 1]} ${tahunBersih} H`;
     } catch (e) {
       return "Memuat tanggal...";
@@ -145,12 +128,23 @@ export default function JamMasjid() {
   return (
     <div className="w-full min-h-screen overflow-x-hidden bg-black text-white flex flex-col p-4 md:p-6">
       
-      {/* HEADER: Tanpa logo, responsif ditumpuk di HP, menyamping di Laptop */}
+      {/* HEADER: DENGAN LOGO CUSTOM CSS TRICK */}
       <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-4 md:gap-0 z-10 text-center md:text-left">
-        <div>
-          <h1 className="text-2xl md:text-4xl font-modern font-extrabold text-white tracking-wide">MASJID NURUL HUDA</h1>
-          <h2 className="text-sm md:text-xl text-neutral-400 font-modern font-light mt-1">Blok G - Telaga Harapan</h2>
-          <p className="text-xs md:text-sm italic text-neutral-500 font-modern mt-1 hidden md:block">Bersama dalam Iman, Menuju Ridha Allah</p>
+        <div className="flex flex-col md:flex-row items-center gap-3 md:gap-4">
+          <img 
+            src="/logo.jpg" 
+            alt="Logo Masjid" 
+            className="w-20 h-20 md:w-24 md:h-24 object-contain"
+            style={{ 
+              filter: 'invert(1) grayscale(1) brightness(2)', 
+              mixBlendMode: 'screen' 
+            }} 
+          />
+          <div>
+            <h1 className="text-2xl md:text-4xl font-modern font-extrabold text-white tracking-wide">MASJID NURUL HUDA</h1>
+            <h2 className="text-sm md:text-xl text-neutral-400 font-modern font-light mt-1">Blok G - Telaga Harapan</h2>
+            <p className="text-xs md:text-sm italic text-neutral-500 font-modern mt-1 hidden md:block">Bersama dalam Iman, Menuju Ridha Allah</p>
+          </div>
         </div>
 
         <div className="text-center md:text-right font-modern mt-2 md:mt-0">
@@ -159,7 +153,7 @@ export default function JamMasjid() {
         </div>
       </div>
 
-      {/* JAM TENGAH: Font Digital & Responsif */}
+      {/* JAM TENGAH */}
       <div className="flex-1 flex flex-col items-center justify-center z-10 my-8 md:my-0">
         <div className="text-6xl sm:text-8xl md:text-[9.5rem] font-bold leading-none tracking-tighter text-white font-digital flex items-end justify-center">
           {waktuSekarang.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
