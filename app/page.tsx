@@ -15,7 +15,6 @@ export default function JamMasjid() {
   const [namaWaktuAktif, setNamaWaktuAktif] = useState('');
   const [teksIqamah, setTeksIqamah] = useState('00:00');
   
-  // STATE PENGUMUMAN BARU (Mendukung Teks Custom & Multi Kajian)
   const [infoPengumuman, setInfoPengumuman] = useState({ 
     pesanUtama: '"Dirikanlah shalat, karena shalat itu mencegah dari perbuatan keji dan mungkar." (QS. Al-Ankabut: 45)', 
     kajianList: [] as {judul: string, pemateri: string}[] 
@@ -56,7 +55,7 @@ export default function JamMasjid() {
           { nama: 'Imsak', waktu: imsakHariIni },
           { nama: 'Subuh', waktu: jadwalHariIni.fajr },
           { nama: 'Syuruk', waktu: jadwalHariIni.sunrise },
-          { nama: 'Zuhur', waktu: jadwalHariIni.dhuhr },
+          { nama: 'Dzuhur', waktu: jadwalHariIni.dhuhr },
           { nama: 'Ashar', waktu: jadwalHariIni.asr },
           { nama: 'Maghrib', waktu: jadwalHariIni.maghrib },
           { nama: 'Isya', waktu: jadwalHariIni.isha }
@@ -134,10 +133,15 @@ export default function JamMasjid() {
   if (!waktuSekarang || !jadwalShalat || !waktuImsak) return <div className="bg-black w-screen h-screen"></div>;
 
   if (modeLayar === 'ADZAN') return (<div className="w-full min-h-screen bg-black flex flex-col items-center justify-center text-white px-4 text-center"><div className="animate-pulse flex flex-col items-center"><h1 className="text-3xl md:text-5xl font-bold mb-4 font-modern text-neutral-400">SAATNYA ADZAN</h1><h2 className="text-6xl md:text-[9rem] font-extrabold text-white my-4 font-digital uppercase">{namaWaktuAktif}</h2></div></div>);
-  if (modeLayar === 'IQAMAH') return (<div className="w-full min-h-screen bg-black flex flex-col items-center justify-center text-white px-4 text-center"><h1 className="text-2xl md:text-4xl mb-4 md:mb-8 font-modern text-neutral-400">Menuju Iqamah</h1><h2 className="text-[6rem] md:text-[12rem] font-bold text-white leading-none font-digital">{teksIqamah}</h2><p className="text-xl md:text-3xl mt-6 md:mt-12 text-neutral-500 font-modern">Luruskan dan Rapatkan Shaf Anda</p></div>);
+  if (modeLayar === 'IQAMAH') return (
+    <div className="w-full min-h-screen bg-black flex flex-col items-center justify-center text-white px-4 text-center">
+      <h1 className="text-2xl md:text-4xl mb-4 md:mb-8 font-modern text-neutral-400">Menuju Iqamah</h1>
+      <h2 className="text-[6rem] md:text-[12rem] font-bold text-white leading-none font-digital">{teksIqamah}</h2>
+      <p className="text-xl md:text-3xl mt-6 md:mt-12 text-neutral-500 font-modern max-w-4xl leading-relaxed capitalize">luruskan dan rapatkan barisan untuk keutamaan sholat berjamaah</p>
+    </div>
+  );
   if (modeLayar === 'SHALAT') return (<div className="w-full min-h-screen bg-black flex flex-col items-center justify-center text-white px-4 text-center"><p className="text-xl md:text-3xl opacity-30 uppercase font-modern text-neutral-400">Harap Tenang & Matikan Alat Komunikasi</p></div>);
 
-  // MENGGABUNGKAN TEKS BERJALAN
   let teksBerjalan = infoPengumuman.pesanUtama;
   if (infoPengumuman.kajianList.length > 0) {
     const teksKajian = infoPengumuman.kajianList.map(k => `Info Kajian: ${k.judul} ${k.pemateri ? `(${k.pemateri})` : ''}`).join('   •   ');
@@ -185,12 +189,12 @@ export default function JamMasjid() {
 
       {/* PANEL JADWAL */}
       <div className="bg-neutral-900/40 border border-neutral-800 rounded-2xl p-2 md:p-3 flex flex-wrap justify-center md:justify-between gap-y-2 md:gap-0 z-10 mb-4">
-        {['Imsak', 'Subuh', 'Syuruk', 'Zuhur', 'Ashar', 'Maghrib', 'Isya'].map((nama) => {
+        {['Imsak', 'Subuh', 'Syuruk', 'Dzuhur', 'Ashar', 'Maghrib', 'Isya'].map((nama) => {
           let waktu, ikon;
           if (nama === 'Imsak') { waktu = waktuImsak; ikon = <path d="M12 2A10 10 0 1022 12A10 10 0 0012 2M12 4A8 8 0 114 12A8 8 0 0112 4Z"/>; }
           else if (nama === 'Subuh') { waktu = jadwalShalat.fajr; ikon = <path d="M12 2l-5 5h3v4h4v-4h3l-5-5zM5 13v2h14v-2H5zm-2 4v2h18v-2H3z"/>; }
           else if (nama === 'Syuruk') { waktu = jadwalShalat.sunrise; ikon = <path d="M12 4V2m0 20v-2m8-8h2M2 12h2m13.657-5.657l1.414-1.414M4.93 19.07l1.414-1.414m12.728 0l-1.414-1.414M4.93 4.93l1.414 1.414M12 8a4 4 0 100 8 4 4 0 000-8z"/>; }
-          else if (nama === 'Zuhur') { waktu = jadwalShalat.dhuhr; ikon = <path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM6.166 17.834a.75.75 0 00-1.06 1.06l1.59 1.591a.75.75 0 101.061-1.06l-1.591-1.59zM4.5 12a.75.75 0 01-.75.75H1.5a.75.75 0 010-1.5h2.25A.75.75 0 014.5 12zM6.166 6.166a.75.75 0 011.06-1.06l1.59 1.591a.75.75 0 11-1.061 1.06l-1.59-1.591z"/>; }
+          else if (nama === 'Dzuhur') { waktu = jadwalShalat.dhuhr; ikon = <path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM6.166 17.834a.75.75 0 00-1.06 1.06l1.59 1.591a.75.75 0 101.061-1.06l-1.591-1.59zM4.5 12a.75.75 0 01-.75.75H1.5a.75.75 0 010-1.5h2.25A.75.75 0 014.5 12zM6.166 6.166a.75.75 0 011.06-1.06l1.59 1.591a.75.75 0 11-1.061 1.06l-1.59-1.591z"/>; }
           else if (nama === 'Ashar') { waktu = jadwalShalat.asr; ikon = <path d="M6 16.5A4.5 4.5 0 0110.5 12h1.365a4.5 4.5 0 110 9H10.5A4.5 4.5 0 016 16.5zM12 8a4 4 0 110-8 4 4 0 010 8z"/>; }
           else if (nama === 'Maghrib') { waktu = jadwalShalat.maghrib; ikon = <path d="M12 3v2a7 7 0 100 14v2a9 9 0 110-18z"/>; }
           else if (nama === 'Isya') { waktu = jadwalShalat.isha; ikon = <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>; }
@@ -209,7 +213,7 @@ export default function JamMasjid() {
         })}
       </div>
       
-      {/* RUNNING TEXT DINAMIS - Diperlambat menjadi 40s */}
+      {/* RUNNING TEXT DINAMIS */}
       <div className="relative py-3 md:py-4 px-2 overflow-hidden bg-neutral-900/30 rounded-full font-modern z-10 border border-neutral-800 flex items-center">
          <div className="animate-[marquee_40s_linear_infinite] whitespace-nowrap text-white tracking-wide text-sm md:text-xl font-light">
            {teksBerjalan}
