@@ -14,13 +14,27 @@ export default function JamMasjid() {
   const [modeLayar, setModeLayar] = useState('NORMAL');
   const [namaWaktuAktif, setNamaWaktuAktif] = useState('');
   const [teksIqamah, setTeksIqamah] = useState('00:00');
-  const [infoKajian, setInfoKajian] = useState({ judul: "", pemateri: "" });
+  
+  // STATE PENGUMUMAN BARU (Mendukung Teks Custom & Multi Kajian)
+  const [infoPengumuman, setInfoPengumuman] = useState({ 
+    pesanUtama: '"Dirikanlah shalat, karena shalat itu mencegah dari perbuatan keji dan mungkar." (QS. Al-Ankabut: 45)', 
+    kajianList: [] as {judul: string, pemateri: string}[] 
+  });
 
   useEffect(() => {
     const kajianRef = ref(db, 'pengumuman');
     const unsubscribeFirebase = onValue(kajianRef, (snapshot) => {
       const data = snapshot.val();
-      if (data) setInfoKajian({ judul: data.judul || "", pemateri: data.pemateri || "" });
+      if (data) {
+        let list = [];
+        if (data.kajianList && Array.isArray(data.kajianList)) list = data.kajianList;
+        else if (data.judul) list = [{ judul: data.judul, pemateri: data.pemateri || "" }]; // Kompatibilitas versi lama
+        
+        setInfoPengumuman({ 
+          pesanUtama: data.pesanUtama || '"Dirikanlah shalat, karena shalat itu mencegah dari perbuatan keji dan mungkar." (QS. Al-Ankabut: 45)', 
+          kajianList: list 
+        });
+      }
     });
 
     const koordinat = new Coordinates(-6.273, 107.098);
@@ -114,9 +128,7 @@ export default function JamMasjid() {
       const daftarBulan = ["Muharram", "Safar", "Rabiul Awal", "Rabiul Akhir", "Jumadil Awal", "Jumadil Akhir", "Rajab", "Sya'ban", "Ramadhan", "Syawal", "Dzulqa'dah", "Dzulhijjah"];
       const tahunBersih = tahun.replace(/[^0-9]/g, '');
       return `${hari} ${daftarBulan[parseInt(bulan) - 1]} ${tahunBersih} H`;
-    } catch (e) {
-      return "Memuat tanggal...";
-    }
+    } catch (e) { return "Memuat tanggal..."; }
   };
 
   if (!waktuSekarang || !jadwalShalat || !waktuImsak) return <div className="bg-black w-screen h-screen"></div>;
@@ -125,20 +137,23 @@ export default function JamMasjid() {
   if (modeLayar === 'IQAMAH') return (<div className="w-full min-h-screen bg-black flex flex-col items-center justify-center text-white px-4 text-center"><h1 className="text-2xl md:text-4xl mb-4 md:mb-8 font-modern text-neutral-400">Menuju Iqamah</h1><h2 className="text-[6rem] md:text-[12rem] font-bold text-white leading-none font-digital">{teksIqamah}</h2><p className="text-xl md:text-3xl mt-6 md:mt-12 text-neutral-500 font-modern">Luruskan dan Rapatkan Shaf Anda</p></div>);
   if (modeLayar === 'SHALAT') return (<div className="w-full min-h-screen bg-black flex flex-col items-center justify-center text-white px-4 text-center"><p className="text-xl md:text-3xl opacity-30 uppercase font-modern text-neutral-400">Harap Tenang & Matikan Alat Komunikasi</p></div>);
 
+  // MENGGABUNGKAN TEKS BERJALAN
+  let teksBerjalan = infoPengumuman.pesanUtama;
+  if (infoPengumuman.kajianList.length > 0) {
+    const teksKajian = infoPengumuman.kajianList.map(k => `Info Kajian: ${k.judul} ${k.pemateri ? `(${k.pemateri})` : ''}`).join('   •   ');
+    teksBerjalan += `   •   ${teksKajian}`;
+  } else {
+    teksBerjalan += '   •   Mari rapatkan shaf dan luruskan barisan.';
+  }
+
   return (
     <div className="w-full min-h-screen overflow-x-hidden bg-black text-white flex flex-col p-4 md:p-6">
       
-      {/* HEADER: DENGAN LOGO CUSTOM CSS TRICK */}
+      {/* HEADER */}
       <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-4 md:gap-0 z-10 text-center md:text-left">
         <div className="flex flex-col md:flex-row items-center gap-3 md:gap-4">
-          <img 
-            src="/logo.jpg" 
-            alt="Logo Masjid" 
-            className="w-20 h-20 md:w-24 md:h-24 object-contain"
-            style={{ 
-              filter: 'invert(1) grayscale(1) brightness(2)', 
-              mixBlendMode: 'screen' 
-            }} 
+          <img src="/logo.jpg" alt="Logo Masjid" className="w-20 h-20 md:w-24 md:h-24 object-contain"
+            style={{ filter: 'invert(1) grayscale(1) brightness(2)', mixBlendMode: 'screen' }} 
           />
           <div>
             <h1 className="text-2xl md:text-4xl font-modern font-extrabold text-white tracking-wide">MASJID NURUL HUDA</h1>
@@ -194,10 +209,10 @@ export default function JamMasjid() {
         })}
       </div>
       
-      {/* RUNNING TEXT */}
+      {/* RUNNING TEXT DINAMIS */}
       <div className="relative py-3 md:py-4 px-2 overflow-hidden bg-neutral-900/30 rounded-full font-modern z-10 border border-neutral-800 flex items-center">
          <div className="animate-[marquee_25s_linear_infinite] whitespace-nowrap text-white tracking-wide text-sm md:text-xl font-light">
-           "Dirikanlah shalat, karena shalat itu mencegah dari perbuatan keji dan mungkar." (QS. Al-Ankabut: 45) &nbsp; • &nbsp; {infoKajian.judul ? `Info Kajian: ${infoKajian.judul} ${infoKajian.pemateri}` : "Mari rapatkan shaf dan matikan alat komunikasi."}
+           {teksBerjalan}
          </div>
       </div>
 
