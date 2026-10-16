@@ -109,20 +109,15 @@ export default function JamMasjid() {
   return (
     <div className="w-full min-h-screen overflow-x-hidden bg-black text-white flex flex-col p-4 md:p-6">
       
-      {/* HEADER: Responsif ditumpuk di HP, menyamping di Laptop */}
+      {/* HEADER: Tanpa logo, responsif ditumpuk di HP, menyamping di Laptop */}
       <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-4 md:gap-0 z-10 text-center md:text-left">
-        <div className="flex flex-col md:flex-row items-center gap-3 md:gap-4">
-          <svg className="w-12 h-12 md:w-16 md:h-16 text-white" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 2C12 2 9 5 9 8C9 10.5 11 12 11 12V22H13V12C13 12 15 10.5 15 8C15 5 12 2 12 2ZM5 12C5 12 2 15 2 18V22H9V16H15V22H22V18C22 15 19 12 19 12H5Z"/>
-          </svg>
-          <div>
-            <h1 className="text-2xl md:text-4xl font-modern font-extrabold text-white tracking-wide">MASJID NURUL HUDA</h1>
-            <h2 className="text-sm md:text-xl text-neutral-400 font-modern font-light mt-1">Blok G - Telaga Harapan</h2>
-            <p className="text-xs md:text-sm italic text-neutral-500 font-modern mt-1 hidden md:block">Bersama dalam Iman, Menuju Ridha Allah</p>
-          </div>
+        <div>
+          <h1 className="text-2xl md:text-4xl font-modern font-extrabold text-white tracking-wide">MASJID NURUL HUDA</h1>
+          <h2 className="text-sm md:text-xl text-neutral-400 font-modern font-light mt-1">Blok G - Telaga Harapan</h2>
+          <p className="text-xs md:text-sm italic text-neutral-500 font-modern mt-1 hidden md:block">Bersama dalam Iman, Menuju Ridha Allah</p>
         </div>
 
-        <div className="text-center md:text-right font-modern">
+        <div className="text-center md:text-right font-modern mt-2 md:mt-0">
           <div className="text-lg md:text-2xl font-semibold text-white tracking-wide">{getMasehi(waktuSekarang)}</div>
           <div className="text-neutral-400 text-sm md:text-lg font-light mt-1">{getHijriah(waktuSekarang)}</div>
         </div>
@@ -143,9 +138,9 @@ export default function JamMasjid() {
         </div>
       </div>
 
-      {/* PANEL JADWAL: Grid 4 kolom di HP, menyamping penuh di TV */}
-      <div className="bg-neutral-900/40 border border-neutral-800 rounded-2xl p-2 md:p-3 grid grid-cols-4 md:flex md:justify-between gap-2 md:gap-0 z-10 mb-4">
-        {['Imsak', 'Subuh', 'Syuruk', 'Zuhur', 'Ashar', 'Maghrib', 'Isya'].map((nama, index) => {
+      {/* PANEL JADWAL: Flex Wrap agar Isya naik dan baris kedua otomatis di tengah */}
+      <div className="bg-neutral-900/40 border border-neutral-800 rounded-2xl p-2 md:p-3 flex flex-wrap justify-center md:justify-between gap-y-2 md:gap-0 z-10 mb-4">
+        {['Imsak', 'Subuh', 'Syuruk', 'Zuhur', 'Ashar', 'Maghrib', 'Isya'].map((nama) => {
           let waktu, ikon;
           if (nama === 'Imsak') { waktu = waktuImsak; ikon = <path d="M12 2A10 10 0 1022 12A10 10 0 0012 2M12 4A8 8 0 114 12A8 8 0 0112 4Z"/>; }
           else if (nama === 'Subuh') { waktu = jadwalShalat.fajr; ikon = <path d="M12 2l-5 5h3v4h4v-4h3l-5-5zM5 13v2h14v-2H5zm-2 4v2h18v-2H3z"/>; }
@@ -156,11 +151,9 @@ export default function JamMasjid() {
           else if (nama === 'Isya') { waktu = jadwalShalat.isha; ikon = <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>; }
 
           const isActive = waktuSelanjutnya?.nama === nama;
-          // Menyembunyikan elemen terakhir (Isya) ke tengah di baris kedua untuk HP agar simetris
-          const gridClass = index === 6 ? 'col-span-4 md:col-span-1 max-w-[200px] mx-auto md:max-w-full' : '';
 
           return (
-            <div key={nama} className={`flex flex-col items-center justify-center py-2 md:py-3 px-1 md:px-4 rounded-xl w-full transition-all duration-300 font-modern ${gridClass} ${
+            <div key={nama} className={`flex flex-col items-center justify-center py-2 md:py-3 px-1 md:px-4 rounded-xl w-[24%] md:w-full transition-all duration-300 font-modern ${
               isActive ? 'bg-white text-black scale-105 shadow-[0_0_20px_rgba(255,255,255,0.3)]' : 'text-neutral-500 bg-transparent'
             }`}>
               <svg className={`w-5 h-5 md:w-7 md:h-7 mb-1 md:mb-2 ${isActive ? 'text-black' : 'text-neutral-600'}`} fill="currentColor" viewBox="0 0 24 24">{ikon}</svg>
