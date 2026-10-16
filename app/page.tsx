@@ -28,7 +28,7 @@ export default function JamMasjid() {
       if (data) {
         let list = [];
         if (data.kajianList && Array.isArray(data.kajianList)) list = data.kajianList;
-        else if (data.judul) list = [{ judul: data.judul, pemateri: data.pemateri || "" }]; // Kompatibilitas versi lama
+        else if (data.judul) list = [{ judul: data.judul, pemateri: data.pemateri || "" }]; 
         
         setInfoPengumuman({ 
           pesanUtama: data.pesanUtama || '"Dirikanlah shalat, karena shalat itu mencegah dari perbuatan keji dan mungkar." (QS. Al-Ankabut: 45)', 
@@ -209,9 +209,9 @@ export default function JamMasjid() {
         })}
       </div>
       
-      {/* RUNNING TEXT DINAMIS */}
+      {/* RUNNING TEXT DINAMIS - Diperlambat menjadi 40s */}
       <div className="relative py-3 md:py-4 px-2 overflow-hidden bg-neutral-900/30 rounded-full font-modern z-10 border border-neutral-800 flex items-center">
-         <div className="animate-[marquee_25s_linear_infinite] whitespace-nowrap text-white tracking-wide text-sm md:text-xl font-light">
+         <div className="animate-[marquee_40s_linear_infinite] whitespace-nowrap text-white tracking-wide text-sm md:text-xl font-light">
            {teksBerjalan}
          </div>
       </div>
