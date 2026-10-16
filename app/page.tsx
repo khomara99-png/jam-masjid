@@ -98,7 +98,33 @@ export default function JamMasjid() {
   const formatJam = (tanggal: Date | null) => tanggal ? tanggal.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) : "--:--";
   
   const getMasehi = (tanggal: Date) => tanggal.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-  const getHijriah = (tanggal: Date) => new Intl.DateTimeFormat('id-TN-u-ca-islamic-umalqura', { day: 'numeric', month: 'long', year: 'numeric' }).format(tanggal).replace(/ AH/i, '').replace(/ H/i, '') + ' H';
+  
+  // FUNGSI HIJRIAH YANG DIPERBARUI
+  const getHijriah = (tanggal: Date) => {
+    // 1. Kalibrasi Manual: Ganti angka 0 menjadi 1 (jika kurang sehari) atau -1 (jika kelebihan sehari)
+    let penyesuaianHari = 0; 
+    
+    // 2. Tambah 1 hari otomatis jika waktu saat ini sudah melewati Maghrib
+    if (jadwalShalat && tanggal.getTime() >= jadwalShalat.maghrib.getTime()) {
+      penyesuaianHari += 1;
+    }
+
+    const tanggalKoreksi = new Date(tanggal.getTime() + (penyesuaianHari * 24 * 60 * 60 * 1000));
+    
+    let hasil = new Intl.DateTimeFormat('id-TN-u-ca-islamic-umalqura', { 
+      day: 'numeric', month: 'long', year: 'numeric' 
+    }).format(tanggalKoreksi);
+    
+    // 3. Perbaikan Spasi Ejaan Bulan
+    hasil = hasil.replace(/Jumadilawal/i, 'Jumadil Awal')
+                 .replace(/Jumadilakhir/i, 'Jumadil Akhir')
+                 .replace(/Rabiulawal/i, 'Rabiul Awal')
+                 .replace(/Rabiulakhir/i, 'Rabiul Akhir')
+                 .replace(/ AH/i, '')
+                 .replace(/ H/i, '') + ' H';
+                 
+    return hasil;
+  };
 
   if (!waktuSekarang || !jadwalShalat || !waktuImsak) return <div className="bg-black w-screen h-screen"></div>;
 
@@ -138,7 +164,7 @@ export default function JamMasjid() {
         </div>
       </div>
 
-      {/* PANEL JADWAL: Flex Wrap agar Isya naik dan baris kedua otomatis di tengah */}
+      {/* PANEL JADWAL */}
       <div className="bg-neutral-900/40 border border-neutral-800 rounded-2xl p-2 md:p-3 flex flex-wrap justify-center md:justify-between gap-y-2 md:gap-0 z-10 mb-4">
         {['Imsak', 'Subuh', 'Syuruk', 'Zuhur', 'Ashar', 'Maghrib', 'Isya'].map((nama) => {
           let waktu, ikon;
@@ -171,15 +197,11 @@ export default function JamMasjid() {
          </div>
       </div>
 
-      {/* IMPORT FONT (Diganti ke Orbitron untuk Jam Digital) & ANIMASI */}
       <style dangerouslySetInnerHTML={{__html: `
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Outfit:wght@300;400;600;800&display=swap');
         .font-digital { font-family: 'Orbitron', sans-serif; }
         .font-modern { font-family: 'Outfit', sans-serif; }
-        @keyframes marquee { 
-          0% { transform: translateX(100vw); } 
-          100% { transform: translateX(-100%); } 
-        }
+        @keyframes marquee { 0% { transform: translateX(100vw); } 100% { transform: translateX(-100%); } }
       `}} />
     </div>
   );
