@@ -99,31 +99,41 @@ export default function JamMasjid() {
   
   const getMasehi = (tanggal: Date) => tanggal.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
   
-  // FUNGSI HIJRIAH YANG DIPERBARUI
+  // === FUNGSI HIJRIAH ANTI BUG ANDROID ===
   const getHijriah = (tanggal: Date) => {
-    // 1. Kalibrasi Manual: Ganti angka 0 menjadi 1 (jika kurang sehari) atau -1 (jika kelebihan sehari)
     let penyesuaianHari = 0; 
     
-    // 2. Tambah 1 hari otomatis jika waktu saat ini sudah melewati Maghrib
+    // Tambah 1 hari otomatis jika waktu saat ini sudah melewati Maghrib
     if (jadwalShalat && tanggal.getTime() >= jadwalShalat.maghrib.getTime()) {
       penyesuaianHari += 1;
     }
 
     const tanggalKoreksi = new Date(tanggal.getTime() + (penyesuaianHari * 24 * 60 * 60 * 1000));
     
-    let hasil = new Intl.DateTimeFormat('id-TN-u-ca-islamic-umalqura', { 
-      day: 'numeric', month: 'long', year: 'numeric' 
-    }).format(tanggalKoreksi);
-    
-    // 3. Perbaikan Spasi Ejaan Bulan
-    hasil = hasil.replace(/Jumadilawal/i, 'Jumadil Awal')
-                 .replace(/Jumadilakhir/i, 'Jumadil Akhir')
-                 .replace(/Rabiulawal/i, 'Rabiul Awal')
-                 .replace(/Rabiulakhir/i, 'Rabiul Akhir')
-                 .replace(/ AH/i, '')
-                 .replace(/ H/i, '') + ' H';
-                 
-    return hasil;
+    try {
+      // Ambil murni angkanya saja (format Internasional)
+      const formatter = new Intl.DateTimeFormat('en-US-u-ca-islamic-umalqura', { 
+        day: 'numeric', month: 'numeric', year: 'numeric' 
+      });
+      const parts = formatter.formatToParts(tanggalKoreksi);
+      
+      let hari = '1', bulan = '1', tahun = '1448';
+      parts.forEach(part => {
+        if (part.type === 'day') hari = part.value;
+        if (part.type === 'month') bulan = part.value;
+        if (part.type === 'year') tahun = part.value;
+      });
+
+      // Daftar nama bulan paten buatan sendiri
+      const daftarBulan = ["Muharram", "Safar", "Rabiul Awal", "Rabiul Akhir", "Jumadil Awal", "Jumadil Akhir", "Rajab", "Sya'ban", "Ramadhan", "Syawal", "Dzulqa'dah", "Dzulhijjah"];
+      
+      // Bersihkan teks tahun jika ada sisa huruf aneh (misal SM/AH)
+      const tahunBersih = tahun.replace(/[^0-9]/g, '');
+
+      return `${hari} ${daftarBulan[parseInt(bulan) - 1]} ${tahunBersih} H`;
+    } catch (e) {
+      return "Memuat tanggal...";
+    }
   };
 
   if (!waktuSekarang || !jadwalShalat || !waktuImsak) return <div className="bg-black w-screen h-screen"></div>;
